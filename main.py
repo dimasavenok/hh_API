@@ -1,5 +1,6 @@
 from src.api.hh_api import HeadHunterAPI
 from src.models.vacancy import Vacancy
+from src.storage.json_saver import JSONSaver
 
 
 def user_interaction():
@@ -10,7 +11,10 @@ def user_interaction():
     api = HeadHunterAPI()
     raw_vacancies = api.get_vacancies(search_query)
     vacancies = Vacancy.cast_to_object_list(raw_vacancies)
+
+    json_saver = JSONSaver()
     for vacancy in vacancies:
+        json_saver.add_vacancy(vacancy)
         print(vacancy)
 
 
