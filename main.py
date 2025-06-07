@@ -1,4 +1,5 @@
 from src.api.hh_api import HeadHunterAPI
+from src.models.vacancy import Vacancy
 
 
 def user_interaction():
@@ -7,7 +8,11 @@ def user_interaction():
     # filter_words = input("Введите ключевые слова для фильтрации вакансий: ").split()
     # salary_range = input("Введите диапазон зарплат: ") # Пример: 100000 - 150000
     api = HeadHunterAPI()
-    print(api.get_vacancies(search_query))
+    raw_vacancies = api.get_vacancies(search_query)
+    vacancies = Vacancy.cast_to_object_list(raw_vacancies)
+    for vacancy in vacancies:
+        print(vacancy)
+
 
 
 

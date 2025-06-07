@@ -14,4 +14,4 @@ class HeadHunterAPI(BaseAPI):
             "per_page": 100,
         }
         response: requests.Response = requests.get(url, params=params)
-        return response.json()
+        return response.json().get("items", [])
