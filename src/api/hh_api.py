@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import requests
 
@@ -6,7 +6,7 @@ from src.api.base_api import BaseAPI
 
 
 class HeadHunterAPI(BaseAPI):
-    def get_vacancies(self, keyword: str) -> Any:
+    def get_vacancies(self, keyword: str) -> List[Dict[Any, Any]]:
         url: str = "https://api.hh.ru/vacancies"
         params: Dict[str, str | int] = {
             "text": keyword,

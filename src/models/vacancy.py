@@ -2,7 +2,8 @@ from typing import Any, Dict, List
 
 
 class Vacancy:
-    def __init__(self, title: str, url: str, salary: Any, description: str) -> None:
+    def __init__(self, vacancy_id: str, title: str, url: str, salary: Any, description: str) -> None:
+        self.vacancy_id = vacancy_id
         self.title: str = title
         self.url: str = url
         self.salary: float = self.validate_salary(salary)
@@ -13,11 +14,15 @@ class Vacancy:
         return (
             f"{self.title} ({self.format_salary(self.salary)})\n"
             f"{self.url}\n"
-            f"{self.description[:100]}...)")
+            f"{self.description[:100]}...)\n")
 
 
     def __lt__(self, other: "Vacancy") -> bool:
         return self.salary < other.salary
+
+
+    def __eq__(self, other: "Vacancy") -> bool:
+        return self.salary == other.salary
 
 
     def format_salary(self, salary:float) -> str:
@@ -35,6 +40,7 @@ class Vacancy:
         for item in data:
             vacancies.append(
                 cls(
+                    vacancy_id=item.get("id"),
                     title=item.get("name", "Не указано"),
                     url=item.get("alternate_url", ""),
                     salary=item.get("salary"),
