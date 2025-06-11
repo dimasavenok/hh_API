@@ -1,3 +1,4 @@
+import json
 from abc import ABC, abstractmethod
 from typing import List, Dict, Union
 
@@ -5,13 +6,22 @@ from src.models.vacancy import Vacancy
 
 
 class BaseStorage(ABC):
-    @abstractmethod
-    def __read_file(self) -> List[Dict[str, Union[str, float]]]:
-        pass
+    __slots__ = ("filename",)
 
-    @abstractmethod
+    def __init__(self, filename: str = "vacancies.json") -> None:
+        self.filename = filename
+
+    def __read_file(self) -> List[Dict[str, Union[str, float]]]:
+        try:
+            with open(self.filename, mode="r", encoding="utf-8") as file:
+                return json.load(file)
+        except FileNotFoundError:
+            self.__write_file(data=[])
+            return []
+
     def __write_file(self, data: List[Dict[str, Union[str, float]]]) -> None:
-        pass
+        with open(self.filename, mode="w", encoding="utf-8") as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)
 
     @abstractmethod
     def get_all(self) -> List[Dict[str, Union[str, float]]]:
