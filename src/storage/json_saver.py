@@ -2,9 +2,10 @@ import json
 from typing import List, Dict, Union
 
 from src.models.vacancy import Vacancy
+from src.storage.base_storage import BaseStorage
 
 
-class JSONSaver():
+class JSONSaver(BaseStorage):
     __slots__ = ("filename",)
 
 
