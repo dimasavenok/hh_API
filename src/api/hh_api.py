@@ -2,16 +2,15 @@ from typing import Any, Dict, List
 
 import requests
 
+
 from src.api.base_api import BaseAPI
 
 
 class HeadHunterAPI(BaseAPI):
+    def __init__(self) -> None:
+       super().__init__()
+
+
+
     def get_vacancies(self, keyword: str) -> List[Dict[Any, Any]]:
-        url: str = "https://api.hh.ru/vacancies"
-        params: Dict[str, str | int] = {
-            "text": keyword,
-            "area": 1,
-            "per_page": 100,
-        }
-        response: requests.Response = requests.get(url, params=params)
-        return response.json().get("items", [])
+        return self._BaseAPI__connect(keyword).json().get("items", [])
