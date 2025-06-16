@@ -2,15 +2,14 @@ import json
 from typing import List, Dict, Union
 
 from src.models.vacancy import Vacancy
+from src.storage.base_storage import BaseStorage
 
 
-class JSONSaver():
+class JSONSaver(BaseStorage):
     __slots__ = ("filename",)
-
 
     def __init__(self, filename: str = "vacancies.json") -> None:
         self.filename = filename
-
 
     def __read_file(self) -> List[Dict[str, Union[str, float]]]:
         try:
@@ -20,11 +19,9 @@ class JSONSaver():
             self.__write_file(data=[])
             return []
 
-
     def __write_file(self, data: List[Dict[str, Union[str, float]]]) -> None:
         with open(self.filename, mode="w", encoding="utf-8") as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
-
 
 
     def get_all(self) -> List[Dict[str, Union[str, float]]]:

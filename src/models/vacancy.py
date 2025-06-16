@@ -2,6 +2,9 @@ from typing import Any, Dict, List
 
 
 class Vacancy:
+    __slots__ = ( "vacancy_id", "title", "url", "salary", "description", "__dict__")
+
+
     def __init__(self, vacancy_id: str, title: str, url: str, salary: Any, description: str) -> None:
         self.vacancy_id = vacancy_id
         self.title: str = title
@@ -12,7 +15,7 @@ class Vacancy:
 
     def __repr__(self) -> str:
         return (
-            f"{self.title} ({self.format_salary(self.salary)})\n"
+            f"{self.title} ({self.__format_salary(self.salary)})\n"
             f"{self.url}\n"
             f"{self.description[:100]}...)\n")
 
@@ -25,7 +28,7 @@ class Vacancy:
         return self.salary == other.salary
 
 
-    def format_salary(self, salary:float) -> str:
+    def __format_salary(self, salary:float) -> str:
         rubles = int(salary)
         kopecks = int(round((salary - rubles)*100)) if salary % 1 != 0 else 0
         formated_rubles = "{:,}".format(rubles).replace(",", " ")
