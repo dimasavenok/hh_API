@@ -2,6 +2,9 @@ from typing import Any, Dict, List
 
 
 class Vacancy:
+    __slots__ = ( "vacancy_id", "title", "url", "salary", "description", "__dict__")
+
+
     def __init__(self, vacancy_id: str, title: str, url: str, salary: Any, description: str) -> None:
         self.vacancy_id = vacancy_id
         self.title: str = title
