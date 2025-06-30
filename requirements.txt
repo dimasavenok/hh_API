@@ -9,3 +9,6 @@ pytest-cov==6.2.1
 
 requests~=2.32.3
 pip~=25.0.1
+protobuf~=6.31.1
+psycopg2-binary~=2.9.10
+google-api-python-client~=2.174.0

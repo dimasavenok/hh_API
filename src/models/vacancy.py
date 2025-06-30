@@ -2,21 +2,23 @@ from typing import Any, Dict, List
 
 
 class Vacancy:
-    __slots__ = ( "vacancy_id", "title", "url", "salary", "description", "__dict__")
+    __slots__ = ( "vacancy_id", "title", "url", "salary", "description", "employer", "__dict__")
 
 
-    def __init__(self, vacancy_id: str, title: str, url: str, salary: Any, description: str) -> None:
+    def __init__(self, vacancy_id: str, title: str, url: str, salary: Any, description: str, employer: str) -> None:
         self.vacancy_id = vacancy_id
         self.title: str = title
         self.url: str = url
         self.salary: float = self.validate_salary(salary)
         self.description: str = description
+        self.employer: str = employer
 
 
     def __repr__(self) -> str:
         return (
             f"{self.title} ({self.__format_salary(self.salary)})\n"
             f"{self.url}\n"
+            f"{self.employer}\n"
             f"{self.description[:100]}...)\n")
 
 
@@ -47,7 +49,8 @@ class Vacancy:
                     title=item.get("name", "Не указано"),
                     url=item.get("alternate_url", ""),
                     salary=item.get("salary"),
-                    description=item.get("snippet", {}).get("requirement", "Нет описания")
+                    description=item.get("snippet", {}).get("requirement", "Нет описания"),
+                    employer=item.get("employer", {}).get("name", "N/A")
                 )
             )
         return vacancies
@@ -59,3 +62,12 @@ class Vacancy:
             return salary.get("from")
         return float(0)
 
+    def to_dict(self):
+        return {
+        "vacancy_id": self.vacancy_id,
+        "title": self.title,
+        "url": self.url,
+        "salary": self.salary,
+        "description": self.description,
+        "employer": self.employer,
+    }

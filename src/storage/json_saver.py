@@ -30,7 +30,7 @@ class JSONSaver(BaseStorage):
 
     def add_vacancy(self, vacancy: Vacancy) -> None:
         vacancies: List[Dict[str, Union[str, float]]] = self.get_all()
-        vacancies.append(vars(vacancy))
+        vacancies.append(vacancy.to_dict())
         self.__write_file(vacancies)
 
 
