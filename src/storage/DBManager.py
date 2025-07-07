@@ -1,4 +1,4 @@
-from typing import Self, Optional
+﻿from typing import Self, Optional
 
 import psycopg2
 from psycopg2.extensions import connection
@@ -8,7 +8,8 @@ class DBManager:
     def __init__(self: Self, connect_params: dict[str, str]) -> None:
         self.connect_params: dict[str, str] = connect_params
         self.conn: connection = self.connect()
-        self.__create_tables()
+        # self.__reset_database()
+        # self.__create_tables()
 
 
     def connect(self) -> connection:
@@ -20,10 +21,24 @@ class DBManager:
                 host=self.connect_params.get("host"),
                 port=self.connect_params.get("port")
             )
+            # return psycopg2.connect(
+            #     dbname="hh_db",
+            #     user="postgres",
+            #     password="hh_password",
+            #     host="localhost",
+            #     port="5432"
+            # )
         except psycopg2.Error:
             raise
         except Exception:
             raise
+
+
+    def __reset_database(self):
+        with self.conn.cursor() as cur:
+            cur.execute("DROP TABLE IF EXISTS vacancies CASCADE;")
+            cur.execute("DROP TABLE IF EXISTS companies CASCADE;")
+        self.conn.commit()
 
 
     def __create_tables(self):
@@ -57,7 +72,7 @@ class DBManager:
             cur.execute("""
             INSERT INTO companies (name)
             VALUES (%s);
-            """, name)
+            """, (name,))
         self.conn.commit()
 
     def insert_vacancy(
@@ -78,7 +93,7 @@ class DBManager:
             cur.execute("""
             INSERT INTO vacancies (company_id, title, salary, url, description)
             VALUES (%s, %s, %s, %s, %s);
-            """, company_id, title, salary, url, description)
+            """, (company_id, title, salary, url, description))
         self.conn.commit()
 
 
@@ -87,6 +102,5 @@ class DBManager:
             cur.execute("""
                         SELECT id FROM companies
                         WHERE name = "%s";
-                        """, name)
+                        """, (name,))
         self.conn.commit()
-
