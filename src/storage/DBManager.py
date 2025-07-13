@@ -32,26 +32,22 @@ class DBManager:
 
     def __create_tables(self):
         with self.conn.cursor() as cur:
-            cur.execute(
-                """
+            cur.execute("""
                 CREATE TABLE IF NOT EXISTS companies (
                     id SERIAL PRIMARY KEY,
                     name VARCHAR(255) NOT NULL UNIQUE
                 );
-                """
-            )
-            cur.execute(
-                """
+            """)
+            cur.execute("""
                 CREATE TABLE IF NOT EXISTS vacancies (
                     id SERIAL PRIMARY KEY,
-                    company_id INTEGER REFERENCES companies(id) ON DELETE CASCADE,
+                    company_id INTEGER REFERENCES companies(id) ON DELETE SET NULL,
                     title VARCHAR(255) NOT NULL,
                     salary FLOAT DEFAULT NULL,
                     url TEXT NOT NULL,
                     description TEXT DEFAULT NULL
                 );
-                """
-            )
+            """)
         self.conn.commit()
 
     def insert_company(self, name: str):
@@ -69,14 +65,15 @@ class DBManager:
         salary: float,
         url: str,
         description: str,
-        company_name: str
+        company_name: Optional[str] = None
     ):
-        company_id = self.get_company_id_by_name(company_name)
-        if company_id is None:
-            self.insert_company(name=company_name)
+        company_id = None
+        if company_name:
             company_id = self.get_company_id_by_name(company_name)
-        if company_id is None:
-            return
+            if company_id is None:
+                self.insert_company(name=company_name)
+                company_id = self.get_company_id_by_name(company_name)
+
         with self.conn.cursor() as cur:
             cur.execute("""
                 INSERT INTO vacancies (company_id, title, salary, url, description)
@@ -134,3 +131,14 @@ class DBManager:
                 WHERE v.salary > %s;
             """, (avg_salary,))
             return cur.fetchall()
+
+    def get_vacancies_with_keyword(self, keyword: str) -> list[tuple]:
+        with self.conn.cursor() as cur:
+            cur.execute("""
+                SELECT v.title, v.salary
+                FROM vacancies v
+                WHERE v.title LIKE %s;
+            """, (f"%{keyword}%",))
+            return cur.fetchall()
+
+
