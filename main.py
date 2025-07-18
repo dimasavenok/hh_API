@@ -27,6 +27,10 @@ def user_interaction():
         "host": "localhost",
         "port": "5432"
     }
+    DBManager.create_database({"user": "postgres",
+        "password": "dima510141",
+        "host": "localhost",
+        "port": "5432"}, "hh_db")
     db: DBManager = DBManager(connect_params)
     for i, vacancy in enumerate(vacancies):
         if i == 10:

@@ -10,6 +10,24 @@ class DBManager:
         self.__reset_database()
         self.__create_tables()
 
+    @classmethod
+    def create_database(cls:"DBManager", params: dict, db_name: str) -> None:
+        conn = None
+        try:
+            conn = psycopg2.connect(**params)
+            conn.autocommit = True
+
+            with conn.cursor() as cur:
+                cur.execute(f"DROP DATABASE IF EXISTS {db_name}")
+                cur.execute(f"CREATE DATABASE {db_name}")
+
+        except psycopg2.Error as e:
+            raise
+
+        finally:
+            if conn:
+                conn.close()
+
     def connect(self) -> connection:
         try:
             return psycopg2.connect(
