@@ -27,7 +27,9 @@ def user_interaction():
         "host": "localhost",
         "port": "5432"
     }
-    DBManager.create_database({"user": "postgres",
+    DBManager.create_database({
+        "dbname": "postgres",
+        "user": "postgres",
         "password": "dima510141",
         "host": "localhost",
         "port": "5432"}, "hh_db")
